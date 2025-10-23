@@ -31,8 +31,11 @@ Route::get('tags', [TagController::class, 'index']);
 // --- Routes protégées (auth Sanctum) ---
 Route::middleware('auth:sanctum')->group(function () {
 
-    // CRUD complet sur items (ajout, modif, suppression)
-    Route::apiResource('items', ItemController::class)->only(['store','update','destroy']);
+    Route::get('/items', [ItemController::class, 'index']);
+    Route::get('/items/{item}', [ItemController::class, 'show']);
+    Route::post('/items', [ItemController::class, 'store']);
+    Route::post('/items/{item}', [ItemController::class, 'update']); // POST car multipart
+    Route::delete('/items/{item}', [ItemController::class, 'destroy']);
 
     // Création de tags
     Route::post('tags', [TagController::class, 'store']);

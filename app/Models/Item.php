@@ -9,7 +9,7 @@ class Item extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title','type','year','author','description','cover_path'];
+    protected $fillable = ['title','type','year','author','description','image_path'];
 
     public function tags()
     {

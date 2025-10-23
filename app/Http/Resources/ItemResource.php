@@ -22,7 +22,7 @@ class ItemResource extends JsonResource
             'author'=>$this->author,
             'description'=>$this->description,
             'tags'=>$this->tags->pluck('name'),
-            'cover_url'=>$this->cover_path ? url('storage/'.$this->cover_path) : null,
+            'image_url' => $this->image_path ? asset('storage/' . $this->image_path) : null,
             'created_at'=>$this->created_at,
         ];
     }

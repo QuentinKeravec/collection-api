@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
+use App\Http\Resources\ItemResource;
 
 class FavoriteController extends Controller
 {
