@@ -14,6 +14,8 @@ class ItemResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $user = $request->user();
+
         return [
             'id'=>$this->id,
             'title'=>$this->title,
@@ -23,6 +25,7 @@ class ItemResource extends JsonResource
             'description'=>$this->description,
             'tags'=>$this->tags->pluck('name'),
             'image_url' => $this->image_path ? asset('storage/' . $this->image_path) : null,
+            'is_favorite' => $user ? $user->favorites->contains($this->id) : false,
             'created_at'=>$this->created_at,
         ];
     }

@@ -8,19 +8,34 @@ use App\Http\Resources\ItemResource;
 
 class FavoriteController extends Controller
 {
-    public function index(Request $r)
+    public function index(Request $request)
     {
-        $items = $r->user()->load(['favorites.tags'])->favorites()->paginate(12);
-        return ItemResource::collection($items);
+        $favorites = $request->user()
+            ->favorites()
+            ->with('tags')
+            ->latest()
+            ->get();
+
+        return ItemResource::collection($favorites);
     }
-    public function store(Request $r, Item $item)
+
+    public function store(Request $request, Item $item)
     {
-        $r->user()->favorites()->syncWithoutDetaching([$item->id]);
-        return response()->json(['ok'=>true]);
+        $user = $request->user();
+
+        if (! $user->favorites()->where('item_id', $item->id)->exists()) {
+            $user->favorites()->attach($item->id);
+        }
+
+        return response()->json(['message' => 'Ajouté aux favoris']);
     }
-    public function destroy(Request $r, Item $item)
+
+    public function destroy(Request $request, Item $item)
     {
-        $r->user()->favorites()->detach($item->id);
-        return response()->noContent();
+        $user = $request->user();
+
+        $user->favorites()->detach($item->id);
+
+        return response()->json(['message' => 'Retiré des favoris']);
     }
 }

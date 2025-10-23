@@ -16,8 +16,7 @@ class Item extends Model
         return $this->belongsToMany(Tag::class);
     }
 
-    public function favoritedBy()
-    {
-        return $this->belongsToMany(User::class, 'user_favorites');
+    public function favoritedBy() {
+        return $this->belongsToMany(User::class, 'user_favorites')->withTimestamps();
     }
 }

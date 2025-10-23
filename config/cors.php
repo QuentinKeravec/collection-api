@@ -21,5 +21,5 @@ return [
     'max_age' => 0,
 
     // Laisse false si tu utilises des Bearer tokens (Sanctum tokens / JWT)
-    'supports_credentials' => false,
+    'supports_credentials' => true,
 ];
