@@ -8,7 +8,7 @@
 
 ## ⚙️ 技術スタック
 
-- **Laravel 11**
+- **Laravel 12**
 - **PHP 8.2+**
 - **SQLite** または **MySQL**
 - **Storage (public ディスク)** による画像保存
