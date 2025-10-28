@@ -1,61 +1,122 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📚 コレクション管理 API — Laravel 11
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+個人のコレクション（アニメ・マンガ・映画・シリーズ・本など）を管理するための **Laravel 製 REST API** です。  
+タグ機能・お気に入り機能・ローカル画像の自動コピーをサポートしています。  
+フロントエンドは React（`collection-client`）で接続できます。
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## ⚙️ 技術スタック
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Laravel 11**
+- **PHP 8.2+**
+- **SQLite** または **MySQL**
+- **Storage (public ディスク)** による画像保存
+- **Seeder (DemoSeeder)** によるデモデータ生成
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 🧩 主な機能
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- アイテム（作品）の CRUD 操作
+- タグ機能（多対多リレーション）
+- お気に入り機能（ユーザーとアイテムの中間テーブル）
+- ローカルストレージに画像を保存・削除
+- デモユーザーとサンプルデータを自動生成
+- React フロントエンドから利用可能な REST API
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 📦 セットアップ
 
-## Laravel Sponsors
+    bash
+    git clone https://github.com/QuentinKeravec/collection-api.git
+    cd collection-api
+    composer install
+    cp .env.example .env
+    php artisan key:generate
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+.env にデータベースを設定します。
+SQLite の場合は次のように設定できます：
 
-### Premium Partners
+    DB_CONNECTION=sqlite
+    DB_DATABASE=/absolute/path/to/database/database.sqlite
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## 💾 デモデータの生成
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+php artisan migrate:fresh --seed --seeder=DemoSeeder
 
-## Code of Conduct
+このコマンドで以下が自動生成されます：
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- デモユーザー：`demo@example.com` / `password`
+- サンプルアイテム（Fullmetal Alchemist, One Piece, Breaking Bad など）
+- 関連するタグ（例：action epic、drame、aventure など）
+- ランダムなお気に入り登録
+- `database/seeders/images/` の画像を `storage/app/public/items/` にコピー
 
-## Security Vulnerabilities
+初回のみストレージリンクを作成してください：
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    php artisan storage:link
 
-## License
+## 🖼️ 画像の仕組み
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- 画像ファイルは `storage/app/public/items/` に保存されます
+- データベースには相対パス（例：`items/BreakingBad.png`）を保存
+- 画像が存在しない場合は `public/images/no-image.png` にフォールバック
+
+## 🔗 API レスポンス例
+
+    {
+      "id": 3,
+      "title": "Breaking Bad",
+      "type": "serie",
+      "year": 2008,
+      "author": "Vince Gilligan",
+      "description": "Un professeur de chimie de lycée chez...",
+      "image_url": "/storage/items/BreakingBad.png",
+      "tags": ["thriller", "drame"],
+      "is_favorite": true
+    }
+
+## 🧠 主な API ルート
+
+| メソッド   | エンドポイント               | 説明          |
+| ------ | --------------------- | ----------- |
+| GET    | `/api/items`          | アイテム一覧を取得   |
+| GET    | `/api/items/{id}`     | 詳細を取得       |
+| POST   | `/api/items`          | アイテムを作成     |
+| PUT    | `/api/items/{id}`     | アイテムを更新     |
+| DELETE | `/api/items/{id}`     | アイテムを削除     |
+| GET    | `/api/tags`           | タグ一覧を取得     |
+| POST   | `/api/favorites/{id}` | お気に入りを追加／削除 |
+
+## 💻 フロントエンド（collection-client）
+
+React + Vite + TailwindCSS 製のフロントエンドと連携します。
+.env に API エンドポイントを指定してください。
+
+例：
+
+    VITE_API_BASE_URL=http://localhost:8000/api
+
+起動：
+
+    npm install
+    npm run dev
+
+## 👤 デモユーザー
+
+| メールアドレス            | パスワード      |
+| ------------------     | ---------- |
+| `demo@example.com`     | `password` |
+
+## 🧰 よく使うコマンド
+| 操作          | コマンド                                                   |
+| ----------- | ------------------------------------------------------ |
+| データベースをリセット | `php artisan migrate:fresh`                            |
+| デモデータを生成    | `php artisan db:seed --class=DemoSeeder`               |
+| リセット＋シード一括  | `php artisan migrate:fresh --seed --seeder=DemoSeeder` |
+| ストレージリンク作成  | `php artisan storage:link`                             |
+| 開発サーバー起動    | `php artisan serve`                                    |

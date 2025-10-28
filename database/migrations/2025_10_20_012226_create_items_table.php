@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('items', function (Blueprint $t) {
             $t->id();
             $t->string('title');
-            $t->enum('type', ['movie','book','game','manga','anime','music']);
+            $t->enum('type', ['film','livre','jeu','manga','anime','musique','serie']);
             $t->unsignedSmallInteger('year')->nullable();
             $t->string('author')->nullable();      // réal./auteur/studio
             $t->text('description')->nullable();

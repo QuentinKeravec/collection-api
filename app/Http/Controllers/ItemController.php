@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\ItemResource;
 
 class ItemController extends Controller
@@ -40,7 +41,7 @@ class ItemController extends Controller
     {
         $data = $request->validate([
             'title'       => 'required|string|max:255',
-            'type'        => 'required|in:movie,book,game,manga,anime,music',
+            'type'        => 'required|in:film,livre,jeu,manga,anime,musique,serie',
             'year'        => 'nullable|integer|min:1800|max:2100',
             'author'      => 'nullable|string|max:255',
             'description' => 'nullable|string',
